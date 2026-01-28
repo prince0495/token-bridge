@@ -9,7 +9,7 @@ interface IWDONK is IERC20 {
     function burn(address _from, uint256 _amount) external ;
 }
 
-contract BridgeBase is Ownable {
+contract BridgePolygon is Ownable {
     address public tokenAddress;
     mapping (address => uint256) public pendingBalance;
 
