@@ -12,3 +12,54 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Network {
+  SEPOLIA
+  POLYGON_AMOY_TESTNET
+}
+
+model NetworkStatus {
+  id                  String            @id @unique @default(uuid())
+  network             Network           @unique  
+  lastProcessedBlock  Int
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @default(now())
+}
+
+model Deposit {
+  id                  String            @id @unique @default(uuid())
+  txHash              String            @unique
+  depositer           String
+  tokenAddress        String
+  amount              String
+  nonce               Int
+  isDone              Boolean           @default(false)
+  network             Network           @default(SEPOLIA)
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @default(now())  
+}
+
+model Withdraw {
+  id                  String            @id @unique @default(uuid())
+  txHash              String            @unique
+  receiver            String
+  tokenAddress        String
+  amount              String
+  isDone              Boolean           @default(false)
+  network             Network           @default(POLYGON_AMOY_TESTNET)
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @default(now())   
+}
+
+model Burn {
+  id                  String            @id @unique @default(uuid())
+  txHash              String            @unique
+  burner              String
+  tokenAddress        String
+  amount              String
+  nonce               Int
+  isDone              Boolean           @default(false)
+  network             Network           @default(POLYGON_AMOY_TESTNET)
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @default(now())
+}
