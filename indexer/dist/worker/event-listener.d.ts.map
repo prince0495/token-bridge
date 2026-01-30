@@ -1,1 +1,0 @@
-{"version":3,"file":"event-listener.d.ts","sourceRoot":"","sources":["../../worker/event-listener.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,QAAQ,CAAC;AACvC,OAAO,KAAK,EAAE,eAAe,EAAE,MAAM,QAAQ,CAAC;AAG9C,OAAO,eAAe,CAAA;AAEtB,eAAO,MAAM,eAAe,GACxB,UAAU,eAAe,EACzB,UAAU,QAAQ,kBAqBrB,CAAA"}
