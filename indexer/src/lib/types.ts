@@ -5,3 +5,11 @@ export type DepositLog = {
     nonce: number;
     txHash: string;
 }
+
+export type BurntLog = {
+    burner: string;
+    tokenAddress: string;
+    amount: string;
+    nonce: number;
+    txHash: string;
+}
