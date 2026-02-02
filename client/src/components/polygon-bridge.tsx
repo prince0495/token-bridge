@@ -1,10 +1,10 @@
 import { useBridgeStore } from "@/lib/store";
 import { ConnectWalletCard } from "./wallet-connect";
-import { formatUnits, parseEther, parseUnits, type Address } from "viem";
+import { formatUnits, parseEther, type Address } from "viem";
 import { useBalance, useChainId, useReadContract, useSwitchChain, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useEffect, useState } from "react";
 import { polygonAmoy } from "viem/chains";
-import { ArrowLeftRight, Flame, ArrowDownCircle, Coins } from "lucide-react";
+import { Flame, Coins } from "lucide-react";
 import FloatingLines from "./ui/FloatingLines";
 import { toast } from "sonner";
 import { polygonBridgeABI } from "@/contracts/abi";

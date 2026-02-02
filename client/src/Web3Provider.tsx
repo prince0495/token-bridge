@@ -22,10 +22,10 @@ export const config = createConfig(
     walletConnectProjectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
 
     // Required App Info
-    appName: "Bridge",
+    appName: "Croxx",
 
     // Optional App Info
-    appDescription: "Your App Description",
+    appDescription: "Croxx is a client that allows user to bridge assets from ethereum sepolia to polygon amoy blockchain or vice versa. It allows users to purchase some ERC20 tokens and move them from seplia to amoy testnet.",
     appUrl: "https://family.co", // your app's url
     appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
   }),
