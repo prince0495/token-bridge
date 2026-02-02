@@ -15,6 +15,10 @@ contract Donk is ERC20, Ownable {
         require(msg.value > 0, "Amount must be greater than 0");
         _mint(msg.sender, msg.value * 898);
     }
+    function withdrawFees() public onlyOwner {
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Fees withdrawal failed!");
+    }
 }
-// Contract Address : 0x25708397c208a0db9B29CEF0B82bfA53857D18E2
-// https://eth-sepolia.blockscout.com/address/0x25708397c208a0db9B29CEF0B82bfA53857D18E2?tab=contract
+// Contract Address : 0x70Ecdd8f46B77a55440f2FF3a15E0C2209F1CD87
+// https://repo.sourcify.dev/11155111/0x70Ecdd8f46B77a55440f2FF3a15E0C2209F1CD87

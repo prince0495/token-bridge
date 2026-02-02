@@ -15,5 +15,5 @@ contract WOggy is ERC20, Ownable {
         _burn(_from, _amount);
     }
 }
-// Contract Address : 0x4046Dd11d7cB25E010c87c2908d3A7705f4D0A13
-// https://repo.sourcify.dev/80002/0x4046Dd11d7cB25E010c87c2908d3A7705f4D0A13
+// Contract Address : 0xBF54dB6545C2E7FC7c54692e6324cC709f8a30f3
+// https://repo.sourcify.dev/80002/0xBF54dB6545C2E7FC7c54692e6324cC709f8a30f3

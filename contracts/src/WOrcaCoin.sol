@@ -15,5 +15,5 @@ contract WOrcaCoin is ERC20, Ownable {
         _burn(_from, _amount);
     }
 }
-// Contract Address : 0xe9DBb3Ac2DAFbF7745aFa3449A2e9366D6977B90
-// https://repo.sourcify.dev/80002/0xe9DBb3Ac2DAFbF7745aFa3449A2e9366D6977B90
+// Contract Address : 0x0598fB17C8346a02f8fbc773b8cCcB99AcD24987
+// https://repo.sourcify.dev/80002/0x0598fB17C8346a02f8fbc773b8cCcB99AcD24987

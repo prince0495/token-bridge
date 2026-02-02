@@ -44,9 +44,9 @@ contract BridgeSepolia is Ownable, ReentrancyGuard {
         address tokenAddress = address(_token);
         require(whitelistedTokens[tokenAddress], "Token is not white listed token");
         require(_amount > 0, "Amount must be greater than 0");
-        require(_amount <= pendingBalance[msg.sender][tokenAddress]);
+        require(_amount <= pendingBalance[msg.sender][tokenAddress], "Insufficient balance to be withdrawn");
+        require(_token.transfer(msg.sender, _amount), "Withdraw failed, please try again later");
         pendingBalance[msg.sender][tokenAddress] -= _amount;
-        _token.transfer(msg.sender, _amount);
     }
     
     function burnedOnPolygon(address _userAddress, IERC20 _token, uint256 _amount, uint256 _nonce) public nonReentrant onlyIndexer {
@@ -74,6 +74,13 @@ contract BridgeSepolia is Ownable, ReentrancyGuard {
         }
     }
 }
+
+// Contract Address : 0x5adcDe83F629A788B4B323534AC9b5A782ad0e4a
+// https://repo.sourcify.dev/11155111/0x5adcDe83F629A788B4B323534AC9b5A782ad0e4a
+// Block Number : 10176561
+
+
+// PREVIOUS : HUGE COINCIDENT
 // Contract Address : 0xC3ea82d13f6Ccdb6d5B0B844acD300EFb20615CA
 // https://repo.sourcify.dev/11155111/0xC3ea82d13f6Ccdb6d5B0B844acD300EFb20615CA
 

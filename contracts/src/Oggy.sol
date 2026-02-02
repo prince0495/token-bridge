@@ -15,7 +15,11 @@ contract Oggy is ERC20, Ownable {
         require(msg.value > 0, "Amount must be greater than 0");
         _mint(msg.sender, msg.value * 898);
     }
+    function withdrawFees() public onlyOwner {
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Fees withdrawal failed!");
+    }
 }
 
-// Deployed At : 0x35DA7E9153E00D5f9EA325eFFe052Fa384114dC4
-// https://repo.sourcify.dev/11155111/0x35DA7E9153E00D5f9EA325eFFe052Fa384114dC4
+// Deployed At : 0x163FDA0d468e48C3B79bBcb8d59C546F445E8984
+// https://repo.sourcify.dev/11155111/0x163FDA0d468e48C3B79bBcb8d59C546F445E8984

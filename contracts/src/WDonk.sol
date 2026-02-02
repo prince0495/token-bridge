@@ -15,5 +15,5 @@ contract WDonk is ERC20, Ownable {
         _burn(_from, _amount);
     }
 }
-// Contract Address : 0x07cA887B4e94101Bd7CF12cd32E26A9E0Aa621cb
-// https://repo.sourcify.dev/80002/0x07cA887B4e94101Bd7CF12cd32E26A9E0Aa621cb
+// Contract Address : 0x5f1953C1e7492504F59D6Ada076b0E2Ef8bBb8D6
+// https://repo.sourcify.dev/80002/0x5f1953C1e7492504F59D6Ada076b0E2Ef8bBb8D6

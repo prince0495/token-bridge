@@ -31,7 +31,6 @@ export const depositOnSepolia = async(userAddress: string, tokenAddress: string,
         amount,
         nonce
     );
-    console.log('succesffully called polygon bridge contract');
 }
 
 export const burntOnPolygon = async(userAddress: string, tokenAddress: string, amount: bigint, nonce: bigint) => {
