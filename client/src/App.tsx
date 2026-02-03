@@ -11,6 +11,7 @@ import ClickSpark from "./components/ui/ClickSpark";
 import { Navbar } from "./components/navbar";
 import { BridgeHome } from "./components/home";
 import Hyperspeed from "./components/ui/Hyperspeed";
+import Badge from "./components/badge";
 
 function App() {
 
@@ -38,6 +39,8 @@ function App() {
           <RenderScreen/>
         </div>
         <Toaster/>
+
+        <Badge/>
       </div>
       </ClickSpark>
     </Web3Provider>

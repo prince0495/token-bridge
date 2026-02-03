@@ -8,24 +8,16 @@ import { Flame, Coins } from "lucide-react";
 import FloatingLines from "./ui/FloatingLines";
 import { toast } from "sonner";
 import { polygonBridgeABI } from "@/contracts/abi";
+import { TOKENS } from "@/constants/token";
 
-const worcaContractAddress = import.meta.env.VITE_WORCA_CONTRACT! as Address;
-const wdonkContractAddress = import.meta.env.VITE_WDONK_CONTRACT! as Address;
-const woggyContractAddress = import.meta.env.VITE_WOGGY_CONTRACT! as Address;
 const polygonBridgeContract = import.meta.env.VITE_POLYGON_BRIDGE_CONTRACT! as Address;
-
-const POLYGON_TOKENS = [
-  { name: "WORCA", address: worcaContractAddress },
-  { name: "WDONK", address: wdonkContractAddress },
-  { name: "WOGGY", address: woggyContractAddress },
-];
 
 export const PolygonBridge = ({ address }: { address: Address }) => {
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const isOnPolygon = chainId === polygonAmoy.id;
   const [activeTab, setActiveTab] = useState<'withdraw' | 'bridge'>('withdraw');
-  const [selectedToken, setSelectedToken] = useState(POLYGON_TOKENS[0]);
+  const { selectedToken, setSelectedToken } = useBridgeStore();
   const [withdrawAmount, setWithdrawAmount] = useState<string | undefined>(undefined);
   const [burnAmount, setBurnAmount] = useState<string | undefined>(undefined);
 
@@ -91,7 +83,7 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
       address: polygonBridgeContract,
       abi: polygonBridgeABI,
       functionName: 'withdraw',
-      args: [ selectedToken.address, parseEther(withdrawAmount)]
+      args: [ selectedToken.polygonAddress, parseEther(withdrawAmount)]
     });
 
     //TODO: later toast on success
@@ -105,7 +97,7 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
       address: polygonBridgeContract,
       abi: polygonBridgeABI,
       functionName: 'burn',
-      args: [ selectedToken.address, parseEther(burnAmount)]
+      args: [ selectedToken.polygonAddress, parseEther(burnAmount)]
     });
 
     //TODO: later toast on success
@@ -173,17 +165,17 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
                 <p className="text-[10px] uppercase text-cyan-500/70 font-bold tracking-wider">Assets</p>
                 <select 
                   className="bg-transparent text-[11px] font-bold text-white focus:outline-none cursor-pointer appearance-none text-right"
-                  onChange={(e) => setSelectedToken(POLYGON_TOKENS.find(t => t.name === e.target.value)!)}
-                  value={selectedToken.name}
+                  onChange={(e) => setSelectedToken(TOKENS.find(t => t.polygonName === e.target.value)!)}
+                  value={selectedToken.polygonName}
                 >
-                  {POLYGON_TOKENS.map(t => (
-                    <option key={t.name} value={t.name} className="bg-[#0a0a0b]">
-                      {t.name}
+                  {TOKENS.map(t => (
+                    <option key={t.polygonName} value={t.polygonName} className="bg-[#0a0a0b]">
+                      {t.polygonName}
                     </option>
                   ))}
                 </select>
               </div>
-              <p className="text-sm font-mono text-cyan-400">{selectedToken.name === 'WORCA' ? (Number(formatUnits(worcaBalance ?? 0n, 18)  ).toFixed(4)): (selectedToken.name === 'WDONK' ? (Number(formatUnits(wdonkBalance ?? 0n, 18)).toFixed(4)): (Number(formatUnits(woggyBalance ?? 0n, 18)).toFixed(4)))} {selectedToken.name}</p>
+              <p className="text-sm font-mono text-cyan-400">{selectedToken.polygonName === 'WORCA' ? (Number(formatUnits(worcaBalance ?? 0n, 18)  ).toFixed(4)): (selectedToken.polygonName === 'WDONK' ? (Number(formatUnits(wdonkBalance ?? 0n, 18)).toFixed(4)): (Number(formatUnits(woggyBalance ?? 0n, 18)).toFixed(4)))} {selectedToken.polygonName}</p>
             </div>
           </div>
         </div>
@@ -210,7 +202,7 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
             {activeTab === 'withdraw' ? (
               <div className="space-y-4 animate-in fade-in duration-300">
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase text-gray-500 font-bold ml-1 tracking-widest">Withdraw {selectedToken.name}</label>
+                  <label className="text-[10px] uppercase text-gray-500 font-bold ml-1 tracking-widest">Withdraw {selectedToken.polygonName}</label>
                   <div className="relative">
                     <input value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} type="number" placeholder="0.00" className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-4 text-white font-mono focus:outline-none focus:border-cyan-500/50 text-sm" />
                   </div>
@@ -220,7 +212,7 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
             ) : (
               <div className="space-y-4 animate-in fade-in duration-300">
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase text-gray-500 font-bold ml-1 tracking-widest">Bridge {selectedToken.name} to Sepolia</label>
+                  <label className="text-[10px] uppercase text-gray-500 font-bold ml-1 tracking-widest">Bridge {selectedToken.polygonName} to Sepolia</label>
                   <div className="relative">
                     <input value={burnAmount} onChange={(e) => setBurnAmount(e.target.value)} type="number" placeholder="0.00" className="w-full bg-orange-500/5 border border-orange-500/10 rounded-xl py-4 px-4 text-white font-mono focus:outline-none focus:border-orange-500/50 text-sm" />
                     <button className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-orange-400 bg-orange-400/10 px-2 py-1 rounded">MAX</button>
@@ -228,7 +220,7 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
                 </div>
                 <div className="p-3 bg-orange-500/5 border border-orange-500/10 rounded-lg flex items-center gap-3">
                    <Flame size={14} className="text-orange-500 animate-pulse" />
-                   <span className="text-[10px] text-orange-200/70 leading-tight">This will burn {selectedToken.name} on Amoy to unlock them on Sepolia.</span>
+                   <span className="text-[10px] text-orange-200/70 leading-tight">This will burn {selectedToken.polygonName} on Amoy to unlock them on Sepolia.</span>
                 </div>
               </div>
             )}
@@ -244,7 +236,7 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
             ? 'bg-white text-black hover:bg-cyan-400 shadow-[0_0_15px_rgba(255,255,255,0.05)]' 
             : 'bg-orange-600 text-white hover:bg-orange-500 shadow-[0_0_15px_rgba(234,88,12,0.2)]'
           }`}>
-            {activeTab === 'withdraw' ? `Execute ${selectedToken.name} Withdrawal` : 'Start Bridge Protocol'}
+            {activeTab === 'withdraw' ? `Execute ${selectedToken.polygonName} Withdrawal` : 'Start Bridge Protocol'}
           </button>
         </div>
 

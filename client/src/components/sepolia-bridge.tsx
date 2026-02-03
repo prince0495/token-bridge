@@ -8,18 +8,12 @@ import { Landmark, ShoppingCart, X, CheckCircle2, Circle, AlertTriangle, Externa
 import FloatingLines from "./ui/FloatingLines";
 import { toast } from "sonner";
 import { donkABI, sepoliaBridgeABI } from "@/contracts/abi";
+import { TOKENS } from "@/constants/token";
 
 const orcaContractAddress = import.meta.env.VITE_ORCA_CONTRACT! as Address;
 const donkContractAddress = import.meta.env.VITE_DONK_CONTRACT! as Address;
 const oggyContractAddress = import.meta.env.VITE_OGGY_CONTRACT! as Address;
 const sepoliaBridgeContract = import.meta.env.VITE_SEPOLIA_BRIDGE_CONTRACT as Address;
-
-
-const TOKENS = [
-  { name: "ORCA", address: orcaContractAddress, price: 0.0012 },
-  { name: "DONK", address: donkContractAddress, price: 0.0008 },
-  { name: "OGGY", address: oggyContractAddress, price: 0.0025 },
-];
 
 export const SepoliaBridge = ({ address }: { address: Address }) => {
   const chainId = useChainId();
@@ -27,7 +21,7 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
   const isOnSepolia = chainId === sepolia.id;
   
   const [activeTab, setActiveTab] = useState<'bridge' | 'withdraw'>('bridge');
-  const [selectedToken, setSelectedToken] = useState(TOKENS[0]);
+  const { selectedToken, setSelectedToken } = useBridgeStore();
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [buyAmount, setBuyAmount] = useState<string | undefined>(undefined);
   const [bridgeStep, setBridgeStep] = useState<'approve' | 'confirm'>('approve');
@@ -93,28 +87,28 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
     }
   }, [isOnSepolia, switchChain]);
 
-  const isOrca = selectedToken.name === "ORCA";
+  const isOrca = selectedToken.sepoliaName === "ORCA";
 
   const handleBuy = () => {
     if(!buyAmount || buyAmount.length === 0) {
       toast.warning("Please enter some amount of ethereum");
       return;
     }
-    else if(selectedToken.name === 'ORCA') {
+    else if(selectedToken.sepoliaName === 'ORCA') {
       toast.warning("Cannot buy ORCA directly, either buy DONK or OGGY , or click on 'Earn ORCA' to stake ethereum to receive ORCA as reward");
       return;
     }
-    else if(selectedToken.name === 'DONK') {
+    else if(selectedToken.sepoliaName === 'DONK') {
       buyDonkWriteContract({
-        address: selectedToken.address,
+        address: selectedToken.sepoliaAddress,
         abi: donkABI,
         functionName: 'purchase',
         value: parseEther(buyAmount)
       })
     }
-    else if(selectedToken.name === 'OGGY') {
+    else if(selectedToken.sepoliaName === 'OGGY') {
       buyOggyWriteContract({
-        address: selectedToken.address,
+        address: selectedToken.sepoliaAddress,
         abi: donkABI,   // Both are similar, just name and symbol is different so same abi can work for it
         functionName: 'purchase',
         value: parseEther(buyAmount)
@@ -129,7 +123,7 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
     }
     
     approveWriteContract({
-      address: selectedToken.address,
+      address: selectedToken.sepoliaAddress,
       abi: [
         {
         constant: false,
@@ -169,7 +163,7 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
       address: sepoliaBridgeContract,
       abi: sepoliaBridgeABI,
       functionName: 'deposit',
-      args: [ selectedToken.address, parseEther(approveAmount)]
+      args: [ selectedToken.sepoliaAddress, parseEther(approveAmount)]
     });
     //TODO:set amount to be 0
   }
@@ -183,7 +177,7 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
       address: sepoliaBridgeContract,
       abi: sepoliaBridgeABI,
       functionName: 'withdraw',
-      args: [selectedToken.address, parseEther(claimAmount)],
+      args: [selectedToken.sepoliaAddress, parseEther(claimAmount)],
       gas: 300_000n
     });
 
@@ -275,13 +269,13 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
                 <p className="text-[10px] uppercase text-blue-500/70 font-bold tracking-wider">Assets</p>
                 <select 
                   className="bg-transparent text-[11px] font-bold text-white focus:outline-none cursor-pointer appearance-none text-right"
-                  onChange={(e) => setSelectedToken(TOKENS.find(t => t.name === e.target.value)!)}
-                  value={selectedToken.name}
+                  onChange={(e) => setSelectedToken(TOKENS.find(t => t.sepoliaName === e.target.value)!)}
+                  value={selectedToken.sepoliaName}
                 >
-                  {TOKENS.map(t => <option key={t.name} value={t.name} className="bg-[#0a0a0b] p-4">{t.name}</option>)}
+                  {TOKENS.map(t => <option key={t.sepoliaName} value={t.sepoliaName} className="bg-[#0a0a0b] p-4">{t.sepoliaName}</option>)}
                 </select>
               </div>
-              <p className="text-sm font-mono text-blue-400">{selectedToken.name === 'ORCA' ? (Number(formatUnits(orcaBalance ?? 0n, 18)  ).toFixed(4)): (selectedToken.name === 'DONK' ? (Number(formatUnits(donkBalance ?? 0n, 18)  ).toFixed(4)): (Number(formatUnits(oggyBalance ?? 0n, 18)  ).toFixed(4)))} {selectedToken.name}</p>
+              <p className="text-sm font-mono text-blue-400">{selectedToken.sepoliaName === 'ORCA' ? (Number(formatUnits(orcaBalance ?? 0n, 18)  ).toFixed(4)): (selectedToken.sepoliaName === 'DONK' ? (Number(formatUnits(donkBalance ?? 0n, 18)  ).toFixed(4)): (Number(formatUnits(oggyBalance ?? 0n, 18)  ).toFixed(4)))} {selectedToken.sepoliaName}</p>
             </div>
           </div>
           
@@ -324,7 +318,7 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
                 </div>
                 <div className="p-3 bg-white/5 rounded-lg border border-white/5">
                   <p className="text-[9px] text-gray-500 font-bold uppercase">Rate</p>
-                  <p className="text-sm font-mono text-blue-400">1 {selectedToken.name} = {selectedToken.price} ETH</p>
+                  <p className="text-sm font-mono text-blue-400">1 {selectedToken.sepoliaName} = {selectedToken.price} ETH</p>
                 </div>
                 <div className="space-y-2">
                   <input 
@@ -361,7 +355,7 @@ export const SepoliaBridge = ({ address }: { address: Address }) => {
                         <div className="flex items-start gap-2 p-2 bg-amber-500/5 border border-amber-500/20 rounded-lg animate-in fade-in zoom-in-95">
                             <AlertTriangle size={12} className="text-amber-500 mt-0.5 flex-shrink-0" />
                             <p className="text-sm text-amber-200/70 leading-relaxed italic">
-                                Manual Override: Ensure you have already approved {selectedToken.name} spend, otherwise the bridge transaction will fail.
+                                Manual Override: Ensure you have already approved {selectedToken.sepoliaName} spend, otherwise the bridge transaction will fail.
                             </p>
                         </div>
                     )}
