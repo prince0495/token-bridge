@@ -83,9 +83,11 @@ export const PolygonBridge = ({ address }: { address: Address }) => {
       address: polygonBridgeContract,
       abi: polygonBridgeABI,
       functionName: 'withdraw',
-      args: [ selectedToken.polygonAddress, parseEther(withdrawAmount)]
+      args: [ selectedToken.polygonAddress, parseEther(withdrawAmount)],
+      gas: 300_000n,
+      maxPriorityFeePerGas: 30n * 10n**9n,
+      maxFeePerGas: 60n * 10n**9n,
     });
-
     //TODO: later toast on success
   }
   const handleBurn = () => {
